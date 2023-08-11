@@ -1,0 +1,75 @@
+~<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <form>
+        <input type="text" name="username" placeholder="username" />
+        <p>Username must be and contain 5 - 20 characters</p>
+  
+        <input type="email" name="email" placeholder="email" />
+        <p>Email must be a valid address, e.g. tauseef@gmail.com</p>
+  
+        <input
+          type="password" name="password" placeholder="password" maxlength="35" class="password"
+        />
+        <p>
+          Password must alphanumeric (@, _ and - are also allowed) and be 8 - 20
+          characters
+        </p>
+        <i class="fas fa-eye fa-2x hide-password"></i>
+        <i class="fas fa-eye-slash fa-2x show-password"></i>
+  
+        <input type="submit" value="Submit" class="submit-btn">
+      </form>
+
+      <!-- js section -->
+<script>
+const inputs = document.querySelectorAll('input');
+const passwordField = document.querySelector('.password');
+const showPasswordIcon = document.querySelector('.show-password');
+const hidePasswordIcon = document.querySelector('.hide-password');
+
+showPasswordIcon.addEventListener('click', () => {
+  showPasswordIcon.style.display = 'none';
+  hidePasswordIcon.style.display = 'block';
+  passwordField.setAttribute('type', 'text');
+});
+
+hidePasswordIcon.addEventListener('click', () => {
+  hidePasswordIcon.style.display = 'none';
+  showPasswordIcon.style.display = 'block';
+  passwordField.setAttribute('type', 'password');
+});
+
+const patterns = {
+  username: /^[a-z\d]{5,20}$/i,
+  email: /^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/,
+  password: /^[\w@_-]{8,30}$/i,
+  telephone: /^\d{11}$/,
+  slug: /^[a-z\d-]{8,20}$/i,
+};
+
+const validate = (field, regex) => {
+  const valid = regex.test(field.value);
+  if (valid) {
+    field.className = 'valid';
+  } else {
+    field.className = 'invalid';
+  }
+};
+
+inputs.forEach((input) => {
+  input.addEventListener('keyup', (e) => {
+    validate(e.target, patterns[e.target.attributes.name.value]);
+  });
+});
+
+</script>
+    
+</body>
+</html>

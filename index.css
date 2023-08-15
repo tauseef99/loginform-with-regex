@@ -38,19 +38,6 @@ input.valid + p {
   display: none;
 }
 
-.input-container {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.show-hide-password {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  color: #747474;
-}
 
 .submit-btn {
   background-color: aqua;
@@ -59,4 +46,34 @@ input.valid + p {
 
 .submit-btn:hover {
   background: rgba(66, 227, 211, 0.907);
+}
+
+.password-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+/* Style for password input fields */
+.password {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Style for show-hide password icons */
+.show-hide-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+/* Style for password validation messages */
+.validation-message {
+  color: rgb(238, 41, 41);
+  font-size: 18px;
+  margin-top: 5px;
 }

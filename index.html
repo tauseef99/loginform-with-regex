@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Login Form</title>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
@@ -24,7 +23,7 @@
 
         <div class="password-container">
             <input type="password" name="repassword" placeholder="Re-enter password" id="repassword" maxlength="35" autocomplete="off" class="password" required />
-            <span class="show-hide-password" id="repassword-toggle"><i class="fas fa-eye"></i></span>
+            <span class="show-hide-password" id="repassword-toggle"></span>
             <p class="validation-message" id="repassword-message"></p>
         </div>
        
@@ -33,97 +32,115 @@
 
     <!-- js section -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const passwordToggleButtons = document.querySelectorAll('.show-hide-password');
-    
-            passwordToggleButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const passwordField = button.previousElementSibling;
-                    if (passwordField.type === 'password') {
-                        passwordField.type = 'text';
-                        button.querySelector('i').classList.remove('fas', 'fa-eye');
-                        button.querySelector('i').classList.add('fas', 'fa-eye-slash');
-                    } else {
-                        passwordField.type = 'password';
-                        button.querySelector('i').classList.remove('fas', 'fa-eye-slash');
-                        button.querySelector('i').classList.add('fas', 'fa-eye');
-                    }
-                });
-            });
-    
-            const usernameField = document.getElementById('username');
-            const emailField = document.getElementById('email');
-            const passwordField = document.getElementById('password');
-            const repasswordField = document.getElementById('repassword');
-            const passwordMessage = document.getElementById('password-message');
-            const repasswordMessage = document.getElementById('repassword-message');
-            const submitButton = document.querySelector('.submit-btn');
-    
-            const patterns = {
-                username: /^[a-z\d]{5,20}$/i,
-                email: /^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/,
-                password: /^[\w@_-]{8,30}$/i,
-            };
-    
-            const validate = (field, regex, messageField, message) => {
-                const valid = regex.test(field.value);
-                if (valid) {
-                    field.classList.remove('invalid');
-                    messageField.textContent = '';
+    document.addEventListener("DOMContentLoaded", function() {
+    const passwordToggleButtons = document.querySelectorAll('.show-hide-password');
+
+    passwordToggleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const passwordFields = document.querySelectorAll('.password');
+            passwordFields.forEach(passwordField => {
+                if (passwordField.type === 'password') {
+                    passwordField.type = 'text';
                 } else {
-                    field.classList.add('invalid');
-                    messageField.textContent = message;
-                }
-            };
-    
-            usernameField.addEventListener('keyup', (e) => {
-                validate(e.target, patterns['username'], null, '');
-            });
-    
-            emailField.addEventListener('keyup', (e) => {
-                validate(e.target, patterns['email'], null, '');
-            });
-    
-            passwordField.addEventListener('keyup', (e) => {
-                validate(e.target, patterns['password'], passwordMessage, 'Password must be alphanumeric (@, _ and - are also allowed) and be 8 - 30 characters');
-            });
-    
-            repasswordField.addEventListener('keyup', (e) => {
-                const passwordValue = passwordField.value;
-                const repasswordValue = e.target.value;
-                if (repasswordValue === passwordValue) {
-                    e.target.classList.remove('invalid');
-                    repasswordMessage.textContent = '';
-                    submitButton.removeAttribute('disabled');
-                } else {
-                    e.target.classList.add('invalid');
-                    repasswordMessage.textContent = 'Passwords do not match';
-                    submitButton.setAttribute('disabled', 'disabled');
+                    passwordField.type = 'password';
                 }
             });
-    
-            const form = document.querySelector('form');
-    
-            form.addEventListener('submit', (e) => {
-                e.preventDefault();
-    
-                // Get the input field values
-                const username = usernameField.value;
-                const email = emailField.value;
-                const password = passwordField.value;
-                const repassword = repasswordField.value;
-    
-                // Display the input values in console
-                console.log('Username:', username);
-                console.log('Email:', email);
-                console.log('Password:', password);
-                console.log('Re-enter Password:', repassword);
-    
-                // Display the input values in an alert message
-                const message = `Username: ${username}\nEmail: ${email}\nPassword: ${password}\nRe-enter Password: ${repassword}`;
-                alert(message);
+
+            
+            const eyeIcons = document.querySelectorAll('.show-hide-password i');
+            eyeIcons.forEach(icon => {
+                icon.classList.toggle('fa-eye');
+                icon.classList.toggle('fa-eye-slash');
             });
         });
+    });
+
+    const usernameField = document.getElementById('username');
+    const emailField = document.getElementById('email');
+    const passwordField = document.getElementById('password');
+    const repasswordField = document.getElementById('repassword');
+    const passwordMessage = document.getElementById('password-message');
+    const repasswordMessage = document.getElementById('repassword-message');
+    const submitButton = document.querySelector('.submit-btn');
+
+    // Hide repasswordField by default
+    repasswordField.style.display = 'none';
+
+    const patterns = {
+        username: /^[a-z\d]{5,20}$/i,
+        email: /^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/,
+        password: /^[\w@_-]{8,30}$/i,
+    };
+
+    const validate = (field, regex, messageField, message) => {
+        const valid = regex.test(field.value);
+        if (valid) {
+            field.classList.remove('invalid');
+            messageField.textContent = '';
+            
+            // Show repasswordField after successful password validation
+            repasswordField.style.display = 'block';
+        } else {
+            field.classList.add('invalid');
+            messageField.textContent = message;
+            
+            // Hide repasswordField if password validation fails
+            repasswordField.style.display = 'none';
+        }
+    };
+
+    usernameField.addEventListener('keyup', (e) => {
+        validate(e.target, patterns['username'], null, '');
+    });
+
+    emailField.addEventListener('keyup', (e) => {
+        validate(e.target, patterns['email'], null, '');
+    });
+
+    passwordField.addEventListener('keyup', (e) => {
+        validate(e.target, patterns['password'], passwordMessage, 'Password must be alphanumeric (@, _ and - are also allowed) and be 8 - 30 characters');
+    });
+
+    repasswordField.addEventListener('keyup', (e) => {
+        const passwordValue = passwordField.value;
+        const repasswordValue = e.target.value;
+        if (repasswordValue === passwordValue) {
+            e.target.classList.remove('invalid');
+            repasswordMessage.textContent = '';
+            submitButton.removeAttribute('disabled');
+        } else {
+            e.target.classList.add('invalid');
+            repasswordMessage.textContent = 'Passwords do not match';
+            submitButton.setAttribute('disabled', 'disabled');
+        }
+    });
+
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        // Get the input field values
+        const username = usernameField.value;
+        const email = emailField.value;
+        const password = passwordField.value;
+        const repassword = repasswordField.value;
+
+        // Display the input values in console
+        console.log('Username:', username);
+        console.log('Email:', email);
+        console.log('Password:', password);
+        console.log('Re-enter Password:', repassword);
+
+        // Display the input values in an alert message
+        const message2 = `successfully submitted`;
+        const message = `Username: ${username}\nEmail: ${email}\nPassword: ${password}\nRe-enter Password: ${repassword}`;
+        alert(message2);
+        alert(message);
+    });
+});
+
     </script>
 </body>
 </html>
+

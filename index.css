@@ -54,6 +54,7 @@ input.valid + p {
 
 .submit-btn {
   background-color: aqua;
+  cursor: pointer;
 }
 
 .submit-btn:hover {

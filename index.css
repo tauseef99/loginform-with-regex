@@ -61,3 +61,21 @@ body {
   .submit-btn:hover{
     background: rgba(66, 227, 211, 0.907);
   }
+  .shpass{
+    text-align: left;
+    margin-left: 0; 
+}
+
+
+.input-container {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.show-hide-password {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+}

@@ -3,85 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>login form</title>
+
+    <title>Login Form</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <form>
-        <input type="text" name="username" placeholder="username" id="username" autocomplete="off" />
+        <input type="text" name="username" placeholder="username" id="username" autocomplete="off" required />
         <p>Username must be and contain 5 - 20 characters with no space</p>
   
-        <input type="email" name="email" placeholder="email" id="email" required autocomplete="off"/>
+        <input type="email" name="email" placeholder="email" id="email" autocomplete="off" required />
         <p>Email must be a valid address, e.g. tauseef@gmail.com</p>
   
-        <input type="password" name="password" placeholder="password" id="password" maxlength="35" autocomplete="off" class="password" required/>
-        <p>Password must be alphanumeric (@, _ and - are also allowed) and be 8 - 20 characters</p>
-        <i class="fas fa-eye fa-2x hide-password"></i>
-        <i class="fas fa-eye-slash fa-2x show-password" ></i>
-  
-        <input type="submit" value="Submit" class="submit-btn" required>
+        <div class="password-container">
+            <input type="password" name="password" placeholder="password" id="password" maxlength="35" autocomplete="off" class="password" required />
+            <span class="show-hide-password" id="password-toggle"><i class="fas fa-eye"></i></span>
+            <p class="validation-message" id="password-message"></p>
+        </div>
+
+        <div class="password-container">
+            <input type="password" name="repassword" placeholder="Re-enter password" id="repassword" maxlength="35" autocomplete="off" class="password" required />
+            <span class="show-hide-password" id="repassword-toggle"><i class="fas fa-eye"></i></span>
+            <p class="validation-message" id="repassword-message"></p>
+        </div>
+       
+        <input type="submit" value="Submit" class="submit-btn">
     </form>
 
     <!-- js section -->
-    
     <script>
-        const inputs = document.querySelectorAll('input');
-        const passwordField = document.querySelector('.password');
-        const showPasswordIcon = document.querySelector('.show-password');
-        const hidePasswordIcon = document.querySelector('.hide-password');
-        
-        showPasswordIcon.addEventListener('click', function() {
-        showPasswordIcon.style.display = 'none';
-        hidePasswordIcon.style.display = 'block';
-        passwordField.setAttribute('type', 'text');
-    });
-        
-        hidePasswordIcon.addEventListener('click', function()  {
-            hidePasswordIcon.style.display = 'none';
-            showPasswordIcon.style.display = 'block';
-            passwordField.setAttribute('type', 'password');
-        });
-        
-        const patterns = {
-            username: /^[a-z\d]{5,20}$/i,
-            email: /^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/,
-            password: /^[\w@_-]{8,30}$/i,
-            
-        };
-        
-        const validate = (field, regex) => {
-            const valid = regex.test(field.value);
-            if (valid) {
-                field.className = 'valid';
-            } else {
-                field.className = 'invalid';
-            }
-        };
-        
-        inputs.forEach((input) => {
-            input.addEventListener('keyup', (e) => {
-                validate(e.target, patterns[e.target.attributes.name.value]);
+        document.addEventListener("DOMContentLoaded", function() {
+            const passwordToggleButtons = document.querySelectorAll('.show-hide-password');
+
+            passwordToggleButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const passwordField = button.previousElementSibling;
+                    if (passwordField.type === 'password') {
+                        passwordField.type = 'text';
+                        button.querySelector('i').classList.remove('fas', 'fa-eye');
+                        button.querySelector('i').classList.add('fas', 'fa-eye-slash');
+                    } else {
+                        passwordField.type = 'password';
+                        button.querySelector('i').classList.remove('fas', 'fa-eye-slash');
+                        button.querySelector('i').classList.add('fas', 'fa-eye');
+                    }
+                });
             });
-        });
 
-        const form = document.querySelector('form');
+            const usernameField = document.getElementById('username');
+            const emailField = document.getElementById('email');
+            const passwordField = document.getElementById('password');
+            const repasswordField = document.getElementById('repassword');
+            const passwordMessage = document.getElementById('password-message');
+            const repasswordMessage = document.getElementById('repassword-message');
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault(); // Prevent the form from submitting normally
+            const patterns = {
+                username: /^[a-z\d]{5,20}$/i,
+                email: /^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,8})(\.[a-z]{2,8})?$/,
+                password: /^[\w@_-]{8,30}$/i,
+            };
 
-            // Get the input field values
-            const username = document.getElementById('username').value;
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            const validate = (field, regex, messageField, message) => {
+                const valid = regex.test(field.value);
+                if (valid) {
+                    field.classList.remove('invalid');
+                    messageField.textContent = '';
+                } else {
+                    field.classList.add('invalid');
+                    messageField.textContent = message;
+                }
+            };
 
-            // Display the input values in console
-            console.log('Username:', username);
-            console.log('Email:', email);
-            console.log('Password:', password);
+            usernameField.addEventListener('keyup', (e) => {
+                validate(e.target, patterns['username'], null, '');
+            });
 
-            // Display the input values in an alert message
-            const message = `Username: ${username}\nEmail: ${email}\nPassword: ${password}`;
-            alert(message);
+            emailField.addEventListener('keyup', (e) => {
+                validate(e.target, patterns['email'], null, '');
+            });
+
+            passwordField.addEventListener('keyup', (e) => {
+                validate(e.target, patterns['password'], passwordMessage, 'Password must be alphanumeric (@, _ and - are also allowed) and be 8 - 30 characters');
+            });
+
+            repasswordField.addEventListener('keyup', (e) => {
+                const passwordValue = passwordField.value;
+                const repasswordValue = e.target.value;
+                if (repasswordValue === passwordValue) {
+                    e.target.classList.remove('invalid');
+                    repasswordMessage.textContent = '';
+                } else {
+                    e.target.classList.add('invalid');
+                    repasswordMessage.textContent = 'Passwords do not match';
+                }
+            });
+
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // Get the input field values
+                const username = usernameField.value;
+                const email = emailField.value;
+                const password = passwordField.value;
+                const repassword = repasswordField.value;
+
+                // Display the input values in console
+                console.log('Username:', username);
+                console.log('Email:', email);
+                console.log('Password:', password);
+                console.log('Re-enter Password:', repassword);
+
+                // Display the input values in an alert message
+                const message = `Username: ${username}\nEmail: ${email}\nPassword: ${password}\nRe-enter Password: ${repassword}`;
+                alert(message);
+            });
         });
     </script>
 </body>
